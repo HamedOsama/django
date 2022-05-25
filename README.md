@@ -64,6 +64,8 @@ Hamed Osama - HamedOsama@gmail.com
 Project link: [Link](https://github.com/HamedOsama/django)
 
 Live Demo link: [Link](http://hamedosama.pythonanywhere.com/home)
+### Username : test
+### Password : 123456
 
 ### License
 
