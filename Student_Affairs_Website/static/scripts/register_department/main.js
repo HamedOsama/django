@@ -10,8 +10,10 @@ const xhttp = new XMLHttpRequest();
 xhttp.open('GET', 'data');
 xhttp.send();
 let data = '';
+console.log(1);
 xhttp.addEventListener('load', function () {
     data = JSON.parse(xhttp.responseText);
+    console.log(data);
     for (let i = 0; i < data.length; i++) {
         id = data[i].id;
         if (data[i].status == true) {
@@ -109,9 +111,10 @@ const selectStudent = () => {
     row.forEach((e) => {
         e.addEventListener('click', () => {
             row.forEach((e) => {
-                e.classList.remove('active');
+                e.classList.remove('activeStd');
             });
-            e.classList.add('active');
+            e.classList.add('activeStd');
         });
     });
 };
+// const instructions = 'a';

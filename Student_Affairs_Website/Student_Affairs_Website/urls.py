@@ -18,6 +18,7 @@ from django.urls import path,include
 from all_students import urls
 urlpatterns = [
     path('admin/', admin.site.urls,name='admin'),
+    path('', include('intro.urls')),
     path('home/', include('home.urls')),
     path('students/', include('all_students.urls')),
     path('add/', include('add_student.urls')),
@@ -25,5 +26,6 @@ urlpatterns = [
     path('register-department/' , include('register_department.urls')),
     path('profile/' , include('Profile.urls')),
     path('instructions/' , include('instructions.urls')),
+    path('new/' , include('add_announcement.urls')),
     path('login/' , include('login.urls')),
 ]

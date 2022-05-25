@@ -32,6 +32,7 @@ ALLOWED_HOSTS = ['hamedosama.pythonanywhere.com','127.0.0.1']
 # Application definition
 
 INSTALLED_APPS = [
+    'intro',
     'home',
     'all_students',
     'add_student',
@@ -39,6 +40,7 @@ INSTALLED_APPS = [
     'register_department',
     'Profile',
     'instructions',
+    'add_announcement',
     'login',
     'django.contrib.admin',
     'django.contrib.auth',

@@ -6,10 +6,12 @@
         <meta charset="UTF-8" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <link rel="stylesheet" href="{%static "css/main/all.min.css" %}"> <link
-        rel="stylesheet" href="{%static "css/main/style.css" %}"> <link
-        rel="stylesheet" href="{%static "css/all_students/style.css" %}"> <link
-        rel="stylesheet" href="{%static "css/register_department/style.css" %}">
+        <link rel="stylesheet" href={% static "css/add_announcement/style.css" %}>
+        <link rel="stylesheet" href={% static "css/main/popup.css" %}>
+        <link rel="stylesheet" href="{%static "css/main/all.min.css" %}"> 
+        <link rel="stylesheet" href="{%static "css/main/style.css" %}"> 
+        <link rel="stylesheet" href="{%static "css/all_students/style.css" %}"> 
+        <link rel="stylesheet" href="{%static "css/register_department/style.css" %}">
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
         <link
@@ -79,7 +81,10 @@
                 </tbody>
             </table>
         </div>
-        {% comment %} <script src="../scripts/logout.js"></script> {% endcomment %}
-        <script src="{%static "scripts/register_department/main.js" %}"></script>
+            {% include "../includes/add_announcement.html" %}
+            {% include "../includes/popup.html" %}
+        <script src={% static 'scripts/main/announcement.js' %}></script>
+        <script src={% static 'scripts/register_department/main.js' %}></script>
+        <script src={% static 'scripts/main/main.js' %}></script>
     </body>
 </html>

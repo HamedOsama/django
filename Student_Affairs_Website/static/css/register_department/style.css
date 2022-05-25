@@ -166,7 +166,7 @@ table tbody tr:last-of-type {
         width: 100%;
     }
 }
-.active {
+.activeStd {
     background-color: #a39a9a;
     background-color: #000000;
     color: white;

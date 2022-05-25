@@ -1,5 +1,6 @@
 studentName = document.getElementById('studentName');
 const id = document.getElementById('id');
+const place = document.getElementById('place');
 const date = document.getElementById('date');
 const gpa = document.getElementById('gpa');
 const points = document.getElementById('points');
@@ -16,7 +17,9 @@ const nationalID = document.getElementById('national-id');
 const btn = document.getElementById('btn');
 const reset = document.getElementById('reset');
 const phonePattern = '^(00201|\\+201|01)[0-2,5]{1}[0-9]{8}$';
-const emailPattern = '/^\\w+@[a-zA-Z_]+?\\.[a-zA-Z]{2,3}$/';
+// const emailPattern = /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/;
+// const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
 let gender;
 let inputs = document.getElementsByTagName('input');
 // let data = JSON.parse(localStorage.students);
@@ -225,6 +228,7 @@ female.addEventListener('click', () => {
 });
 let check = true;
 btn.addEventListener('click', () => {
+    check = true;
     for (let i = 0; i < inputs.length - 3; i++) {
         if (inputs[i].value == '') {
             inputs[i].placeholder = 'Please Fill This';
@@ -235,64 +239,81 @@ btn.addEventListener('click', () => {
         id.value = '';
         id.placeholder = 'ID Must Be Numbers';
         id.style.backgroundColor = '#f3aeaec7';
+        check = false;
     } else if (id.value.length != 8 && id.value != '') {
         id.value = '';
         id.placeholder = 'ID Must Equal 8 Numbers';
         id.style.backgroundColor = '#f3aeaec7';
+        check = false;
     }
     if ((+gpa.value < 0 || +gpa.value > 4) && gpa.value != '') {
         gpa.value = '';
         gpa.placeholder = 'GPA Must Be Between 0 and 4';
         gpa.style.backgroundColor = '#f3aeaec7';
+        check = false;
     }
     if ((+level.value < 1 || +level.value > 4) && level.value != '') {
         level.value = '';
         level.placeholder = 'Level Must Be Between 1 and 4';
         level.style.backgroundColor = '#f3aeaec7';
+        check = false;
     }
     if ((+year.value < 2018 || +year.value > 2022) && year.value != '') {
         year.value = '';
         year.placeholder = 'Year Must Be Between 2018 and 2022';
         year.style.backgroundColor = '#f3aeaec7';
+        check = false;
     }
     if (+points.value <= 1000) {
         points.value = '';
         points.placeholder = 'points Must Be More Than Or Equal 1000';
         points.style.backgroundColor = '#f3aeaec7';
+        check = false;
     }
     if (!departments.includes(dep.value.toLowerCase()) && dep.value != '') {
         dep.value = '';
         dep.placeholder = 'Department Not Found';
         dep.style.backgroundColor = '#f3aeaec7';
+        check = false;
     }
     if (!phone.value.match(phonePattern) && phone.value != '') {
         phone.value = '';
         phone.placeholder = 'Wrong Phone Number Must Equal 11 Numbers';
         phone.style.backgroundColor = '#f3aeaec7';
+        check = false;
     }
     if (!email.value.match(emailPattern) && email.value != '') {
         email.value = '';
         email.placeholder = 'Not Valid Email';
         email.style.backgroundColor = '#f3aeaec7';
+        check = false;
     }
     if (!statuses.includes(Status.value.toLowerCase()) && Status.value != '') {
         Status.value = '';
         Status.placeholder = 'Status Must Equal Active or Not Active';
         Status.style.backgroundColor = '#f3aeaec7';
+        check = false;
     }
     if (!nationalities.includes(nationality.value.toLowerCase()) && nationality.value != '') {
         nationality.value = '';
         nationality.placeholder = 'Invalid Nationality';
         nationality.style.backgroundColor = '#f3aeaec7';
+        check = false;
     }
     if (isNaN(+nationalID.value) && nationalID.value != '') {
         nationalID.value = '';
         nationalID.placeholder = 'National ID Must Be Numbers';
         nationalID.style.backgroundColor = '#f3aeaec7';
+        check = false;
     }
     if (gender == undefined) {
         check = false;
-        alert('Please Choose Gender');
+        annStatus.innerHTML = 'Failed';
+        text.innerHTML = '<p>Error Please Choose gender</p>';
+        icon.innerHTML = '<i class="fa-solid fa-xmark"></i>';
+        document.documentElement.style.setProperty('--pop', '#ff3821');
+        document.querySelector('.popup').classList.add('active');
+        // alert('Please Choose Gender');
     }
     // for (let i = 0; i < data.length; i++) {
     //     if (data[i].id == id.value) {
@@ -324,7 +345,7 @@ btn.addEventListener('click', () => {
         gpa: gpa.value,
         gender: gender,
         level: level.value,
-        status: Status.value,
+        status: Status.value.toLowerCase() == 'active' ? 'True' : 'False',
         dep: dep.value == 'General' ? dep.value : dep.value.toUpperCase(),
         email: email.value,
         birth: date.value,
@@ -335,13 +356,39 @@ btn.addEventListener('click', () => {
             check = false;
         }
     }
+    // edit here
     if (check) {
-        data.push(obj);
+        annStatus.innerHTML = 'Success';
+        document.documentElement.style.setProperty('--pop', '#2196f3');
+        icon.innerHTML = '<i class="fa fa-check"></i>';
+        // console.log(`name=${obj.name}&id=${obj.id}&gpa=${obj.gpa}&gender=${obj.gender}
+        // &level=${obj.level}&status=${obj.status}&dep=${obj.dep}
+        // &email=${obj.email}&birth=${obj.birth}&number=${obj.number}`);
+        csrftoken = document.cookie.split('csrftoken=').join('');
+        const req = new XMLHttpRequest();
+        req.open('POST', 'add-new-student');
+        req.setRequestHeader('X-CSRFToken', csrftoken);
+        req.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        req.send(`name=${obj.name}&id=${obj.id}&gpa=${obj.gpa}&gender=${obj.gender}&level=${obj.level}&status=${obj.status}&dep=${obj.dep}&email=${obj.email}&birth=${obj.birth}&number=${obj.number}`);
+        req.addEventListener('load', () => {
+            if (req.responseText.toLowerCase() == 'done') {
+                text.innerHTML = '<p>New Student Added Successfully</p>';
+                document.querySelector('.popup').classList.add('active');
+                clearAll();
+            } else {
+                annStatus.innerHTML = 'Failed';
+                text.innerHTML = "<p>Error Can't Add New Student ,</p><p>Please Try Again!!!</p>";
+                icon.innerHTML = '<i class="fa-solid fa-xmark"></i>';
+                document.documentElement.style.setProperty('--pop', '#ff3821');
+                document.querySelector('.popup').classList.add('active');
+            }
+        });
+        // data.push(obj);
         // localStorage.students = JSON.stringify(data);
-        alert('Student Added Successfully');
-        location.reload();
+        // alert('Student Added Successfully');
+        // location.reload();
     }
-    check = true;
+    // check = true;
 });
 
 for (let i = 0; i < inputs.length - 3; i++) {
@@ -350,6 +397,54 @@ for (let i = 0; i < inputs.length - 3; i++) {
     });
 }
 
-reset.addEventListener('click', () => {
-    location.reload();
-});
+const clearAll = () => {
+    annStatus.innerHTML = 'Success';
+    document.documentElement.style.setProperty('--pop', '#2196f3');
+    icon.innerHTML = '<i class="fa fa-check"></i>';
+    text.innerHTML = '<p>Form Erased Successfully</p>';
+    document.querySelector('.popup').classList.add('active');
+    studentName.value = '';
+    id.value = '';
+    gpa.value = '';
+    gender = '';
+    level.value = '';
+    Status.value = '';
+    dep.value;
+    email.value = '';
+    date.value = '';
+    phone.value = '';
+    nationality.value = '';
+    points.value = '';
+    nationalID.value = '';
+    place.value = '';
+    year.value = '';
+    studentName.style.backgroundColor = 'white';
+    place.style.backgroundColor = 'white';
+    id.style.backgroundColor = 'white';
+    gpa.style.backgroundColor = 'white';
+    level.style.backgroundColor = 'white';
+    Status.style.backgroundColor = 'white';
+    dep.style.backgroundColor = 'white';
+    email.style.backgroundColor = 'white';
+    date.style.backgroundColor = 'white';
+    phone.style.backgroundColor = 'white';
+    nationality.style.backgroundColor = 'white';
+    points.style.backgroundColor = 'white';
+    nationalID.style.backgroundColor = 'white';
+    year.style.backgroundColor = 'white';
+    studentName.placeholder = 'Student Name';
+    id.placeholder = 'Student ID';
+    place.placeholder = 'Enter the Place of Birth';
+    gpa.placeholder = '0';
+    level.placeholder = 'Enter Level';
+    Status.placeholder = 'Active or inactive';
+    dep.placeholder = 'General';
+    email.placeholder = 'Enter valid mail';
+    phone.placeholder = 'Enter your number';
+    nationality.placeholder = 'Enter your Nationality';
+    points.placeholder = '1000';
+    nationalID.placeholder = 'Enter your National Id';
+    year.placeholder = '2020';
+};
+
+reset.addEventListener('click', clearAll());

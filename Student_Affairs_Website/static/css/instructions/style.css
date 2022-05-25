@@ -39,6 +39,9 @@ body {
     border-radius: 20px;
     transition: transform 0.5s;
 }
+.maintenance {
+    background: linear-gradient(135deg, #ffee47, #ffc8d4);
+}
 .head:hover {
     transform: translateY(-10px);
 }

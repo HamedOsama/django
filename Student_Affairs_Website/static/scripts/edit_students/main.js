@@ -1,5 +1,5 @@
 const xhttp = new XMLHttpRequest();
-xhttp.open('get', 'data');
+xhttp.open('get', 'data', true);
 xhttp.send();
 let data = [];
 let updateButton;
@@ -38,6 +38,14 @@ xhttp.addEventListener('load', () => {
 });
 const body = document.getElementById('body');
 const search = document.getElementById('search');
+const text = document.getElementById('text');
+const annEditStatus = document.getElementById('annStatus');
+// let color = getComputedStyle(document.documentElement).getPropertyValue('--pop');
+// let icon = document.querySelector('.icon');
+const btn = document.querySelector('.okay');
+btn.addEventListener('click', () => {
+    document.querySelector('.popup').classList.remove('active');
+});
 let deleteButton, submit;
 
 search.addEventListener('keyup', () => {
@@ -161,6 +169,9 @@ const validate = () => {
     }
 };
 const updateDB = (data) => {
+    annEditStatus.innerHTML = 'Success';
+    document.documentElement.style.setProperty('--pop', '#2196f3');
+    icon.innerHTML = '<i class="fa fa-check"></i>';
     // const id = +del;
     // const student = data[id].id;
     csrftoken = document.cookie.split('csrftoken=').join('');
@@ -175,9 +186,16 @@ const updateDB = (data) => {
     req.onload = () => {
         if (req.responseText == '200') {
             changeView();
-            alert('Student Data Updated Successfully');
+            text.innerHTML = '<p>Student Data Updated Successfully</p>';
+            document.querySelector('.popup').classList.add('active');
         } else {
-            alert('Error Please Try Again!!!');
+            annEditStatus.innerHTML = 'Failed';
+            text.innerHTML = "<p>Error Can't update Student Data,</p><p>Please Try Again!!!</p>";
+            icon.innerHTML = '<i class="fa-solid fa-xmark"></i>';
+            document.documentElement.style.setProperty('--pop', '#ff3821');
+            // color = '#ff3821';
+            document.querySelector('.popup').classList.add('active');
+            // alert('Error Please Try Again!!!');
         }
     };
 
@@ -186,6 +204,9 @@ const updateDB = (data) => {
     // document.querySelector(`.data${id}`).innerHTML = '';
 };
 const Delete = (del) => {
+    // color = ' #2196f3';
+    document.documentElement.style.setProperty('--pop', '#2196f3');
+    icon.innerHTML = '<i class="fa fa-check"></i>';
     const id = +del;
     const student = data[id].id;
     const csrftoken = document.cookie.split('csrftoken=').join('');
@@ -197,13 +218,18 @@ const Delete = (del) => {
     req.send(`id=${student}`);
     req.addEventListener('load', () => {
         if (req.responseText.toLowerCase() == 'deleted') {
-            alert('Student Deleted Successfully');
+            text.innerHTML = '<p>Student Deleted Successfully</p>';
+            document.querySelector('.popup').classList.add('active');
             console.log(id);
             console.log(student);
             document.querySelector(`.data${id}`).innerHTML = '';
             data.splice(id, 1);
         } else {
-            alert('Error Please Try Again!!!');
+            text.innerHTML = "<p>Error Can't Delete Student</p><p>Please Try Again!!!</p>";
+            icon.innerHTML = '<i class="fa-solid fa-xmark"></i>';
+            document.documentElement.style.setProperty('--pop', '#ff3821');
+            document.querySelector('.popup').classList.add('active');
+            // alert('Error Please Try Again!!!');
         }
     });
 };

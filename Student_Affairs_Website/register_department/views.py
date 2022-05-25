@@ -3,7 +3,7 @@ from django.http import JsonResponse , HttpResponse
 from all_students.models import Students
 # Create your views here.
 def ajax(request):
-    js = list(Students.objects.order_by('id').values().filter(Department = 'General'))
+    js = list(Students.objects.order_by('id').filter(Department = 'General').values())
     return JsonResponse(js , safe=False)
 def index(request):
     ajax(request)
